@@ -1,10 +1,10 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+//import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain {
     WPI_TalonSRX leftLeader;
@@ -47,7 +47,7 @@ public class DriveTrain {
     }
 
     public void TalonDriveNoLimiter() {
-        mydrive.tankDrive(controller.getRawAxis(1) * 10, controller.getRawAxis(5) * 10)
+        myDrive.tankDrive(controller.getRawAxis(1) * 10, controller.getRawAxis(5) * 10);
     }
 /* The encoder code, encoders not present yet
     public void MagEncoder() {
