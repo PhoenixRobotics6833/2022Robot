@@ -4,38 +4,107 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * This is a demo program showing the use of the DifferentialDrive class, specifically it contains
- * the code necessary to operate a robot with tank drive.
- */
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
+
+
 public class Robot extends TimedRobot {
-  private DifferentialDrive m_myRobot;
-  private Joystick m_leftStick;
-  private Joystick m_rightStick;
+   // Mechanical
+   Joystick controller;
+   Joystick controller2;
+   DriveTrain driveTrain;
 
-  private final MotorController m_leftMotor = new PWMSparkMax(0);
-  private final MotorController m_rightMotor = new PWMSparkMax(1);
+   // Programming
+   NetworkTableInstance table = NetworkTableInstance.getDefault();
+   AHRS ahrs;
+   double rotateToAngle;
+   double currentAngle;
+   //Auto useAuto;
+
+   // Auto
+   SendableChooser<String> autoChooser = new SendableChooser<>();
+   int startingPosition;
+   String close;
+   String mid;
+   String far;
+   String doNothing;
+   String test;
+   Timer timer;
 
   @Override
   public void robotInit() {
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
-    m_rightMotor.setInverted(true);
 
-    m_myRobot = new DifferentialDrive(m_leftMotor, m_rightMotor);
-    m_leftStick = new Joystick(0);
-    m_rightStick = new Joystick(1);
+    // Mechanical
+    controller = new Joystick(0);
+    controller2 = new Joystick(1);
+    driveTrain = new DriveTrain(0, 1, 2, 3, controller);
+    timer = new Timer();
+
+    // Programming
+    ahrs = new AHRS(SPI.Port.kMXP);
+    //useAuto = new Autonomous();
+
+    autoChooser.addOption("Start Close", "Start Close");
+    autoChooser.addOption("Start Close", "Start Close");
+    autoChooser.addOption("Start Mid", "Start Mid");
+    autoChooser.addOption("Start Far", "Start Far");
+    autoChooser.addOption("Test", "Test");
+    autoChooser.addOption("Drive Straight", "Drive Straight");
+  //  autoChooser.addOption("Do Nothing", "Do Nothing");
+    autoChooser.setDefaultOption("Do Nothing", "Do Nothing");
+
+    SmartDashboard.putData(autoChooser);
+  }
+
+/*
+  @Override
+  public void disabledPeriodic() {
+
+    //useRobot.DriveOff();
+
   }
 
   @Override
-  public void teleopPeriodic() {
-    m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+  public void robotPeriodic() {
+
+
   }
+
+  @Override
+  public void autonomousInit() {
+
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+
+  }
+*/
+
+  @Override
+  public void teleopPeriodic() {
+    
+    driveTrain.TalonDrive();
+
+    if(controller.getRawAxis(2) > .5) {
+      driveTrain.TalonDriveNoLimiter();
+
+    } else {
+      driveTrain.TalonDrive();
+    }
+  }
+
+  /*
+  @Override
+  public void testPeriodic() {
+
+  }
+  */
 }
