@@ -20,6 +20,7 @@ public class Robot extends TimedRobot {
    Joystick controller;
    Joystick controller2;
    DriveTrain driveTrain;
+   Intake intake;
 
    // Programming
    NetworkTableInstance table = NetworkTableInstance.getDefault();
@@ -46,6 +47,8 @@ public class Robot extends TimedRobot {
     controller2 = new Joystick(1);
     driveTrain = new DriveTrain(0, 1, 2, 3, controller);
     timer = new Timer();
+    intake = new Intake(8, controller2);
+    
 
     // Programming
     ahrs = new AHRS(SPI.Port.kMXP);
@@ -92,6 +95,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     
     driveTrain.TalonDrive();
+    intake.intakeControl();
 
     if(controller.getRawAxis(2) > .5) {
       driveTrain.TalonDriveNoLimiter();

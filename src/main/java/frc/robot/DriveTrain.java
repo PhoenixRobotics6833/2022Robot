@@ -32,6 +32,8 @@ public class DriveTrain {
         rightLeader = new WPI_TalonSRX(motor3);
         rightFollower = new WPI_TalonSRX(motor4);
         
+        //leftEncoder = new encoder(?, ?)
+
         controller = controller1;
 
         leftFollower.follow(leftLeader);
