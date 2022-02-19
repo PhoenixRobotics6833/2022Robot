@@ -1,7 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.Encoder;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //Code for relative encoders (we don't use relative encoders)
 /*

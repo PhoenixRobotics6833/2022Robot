@@ -84,7 +84,7 @@ public class DriveTrain {
     public double leftEncoderDistance() {
 
         if(timer.advanceIfElapsed(0.1)) {
-            lEncoderDistance += (leftEncoder / 4096) * (6 * Math.PI) / gearRatio;
+            lEncoderDistance += (-leftEncoder / 4096) * (6 * Math.PI) / gearRatio;
         }
         return lEncoderDistance;
     }
