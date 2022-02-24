@@ -10,8 +10,11 @@ import edu.wpi.first.wpilibj.Timer;
 public class DriveTrain {
     WPI_TalonSRX leftLeader;
     WPI_TalonSRX rightLeader;
+
     WPI_TalonSRX leftFollower;
+    WPI_TalonSRX leftFollower2;
     WPI_TalonSRX rightFollower;
+    WPI_TalonSRX rightFollower2;
 
     Joystick controller;
 
@@ -33,16 +36,20 @@ public class DriveTrain {
 
     Timer timer;
 
-    public DriveTrain(int motor1, int motor2, int motor3, int motor4, Joystick controller1) {
+    public DriveTrain(int motor1, int motor2, int motor3, int motor4, int motor5, int motor6, Joystick controller1) {
         leftLeader = new WPI_TalonSRX(motor1);
         leftFollower = new WPI_TalonSRX(motor2);
-        rightLeader = new WPI_TalonSRX(motor3);
-        rightFollower = new WPI_TalonSRX(motor4);
+        leftFollower2 = new WPI_TalonSRX(motor3);
+        rightLeader = new WPI_TalonSRX(motor4);
+        rightFollower = new WPI_TalonSRX(motor5);
+        rightFollower = new WPI_TalonSRX(motor6);
         
 
         controller = controller1;
 
         leftFollower.follow(leftLeader);
+        leftFollower2.follow(leftLeader);
+        rightFollower.follow(rightLeader);
         rightFollower.follow(rightLeader);
 
         myDrive = new DifferentialDrive(leftLeader, rightLeader);

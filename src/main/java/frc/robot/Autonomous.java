@@ -5,7 +5,6 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Autonomous {
-    DriveTrain useTalons;
     AutoRobotAction useRobot;
     Timer timer;
     int autoStep;

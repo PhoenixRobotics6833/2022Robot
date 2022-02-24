@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
     // Mechanical
     controller = new Joystick(0);
     controller2 = new Joystick(1);
-    driveTrain = new DriveTrain(0, 1, 2, 3, controller);
+    driveTrain = new DriveTrain(0, 1, 2, 3, 4, 5, controller);
     timer = new Timer();
     intake = new Intake(8, controller2);
     

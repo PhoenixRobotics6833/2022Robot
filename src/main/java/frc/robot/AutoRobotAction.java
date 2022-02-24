@@ -198,6 +198,7 @@ public class AutoRobotAction {
         return useTalon.rightLeader.getSelectedSensorVelocity();
     }
 
+    /*
     double startingAngle;
     double targetAngle;
     boolean isTurning = false;
@@ -235,9 +236,51 @@ public class AutoRobotAction {
             }
         }
     }
+    */
+
+    double currentAngle;
+    double error;
+    double sumError;
+    double output;
+    //daisy's rotate code
+    public void rotateToAngle(double target) {  
+
+        currentAngle = ahrs.getAngle();
+        error = Math.abs((target - currentAngle)) / 360;
+        System.out.println("current angle: " + currentAngle);
+
+        sumError = sumError + error * .02;
+
+        System.out.println("sumError: " + sumError);
+
+        output = .7 * Math.sqrt(error);
+        System.out.println("output: " + output);
+
+        if (currentAngle < target - 0.5) {
+            useTalon.leftLeader.set(output);
+            useTalon.rightLeader.set(output);
+            System.out.println("angle less than target");
+
+        } else if (currentAngle > target + 0.5) {
+            useTalon.leftLeader.set(-output);
+            useTalon.rightLeader.set(-output);
+            System.out.println("angle greater than target");
+
+        } else {
+            useTalon.leftLeader.set(0.0);
+            useTalon.rightLeader.set(0.0);
+            System.out.println("angle on target");
+            sumError = 0;
+        }
+    }
+
+
+/*
     public void resetTurning() {
         isDone = false;
+        isTurning = false;
     }
+    */
 
     boolean isMoving = false;
     // drives forwards (+) or backwards (-) in inches
