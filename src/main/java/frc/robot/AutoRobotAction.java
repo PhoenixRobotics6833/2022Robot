@@ -274,13 +274,10 @@ public class AutoRobotAction {
         }
     }
 
-
-/*
-    public void resetTurning() {
-        isDone = false;
-        isTurning = false;
+    public void resetGyro() {
+        ahrs.reset();
     }
-    */
+
 
     boolean isMoving = false;
     // drives forwards (+) or backwards (-) in inches

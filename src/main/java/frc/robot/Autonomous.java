@@ -26,4 +26,11 @@ public class Autonomous {
     public void resetStep() {
         autoStep = 0;
     }
+
+    public void resetDriveDistance() {
+        useRobot.resetDriveDistance();
+    }
+    public void resetGyro(){
+        useRobot.resetGyro();
+    }
 }

@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
    AHRS ahrs;
    double rotateToAngle;
    double currentAngle;
-   //Auto useAuto;
+   Autonomous useAuto;
 
    // Auto
    SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData(autoChooser);
   }
 
-/*
+
   @Override
   public void disabledPeriodic() {
 
@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
 
   }
-*/
+
 
   @Override
   public void teleopPeriodic() {
@@ -106,10 +106,10 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /*
+  
   @Override
   public void testPeriodic() {
 
   }
-  */
+  
 }
