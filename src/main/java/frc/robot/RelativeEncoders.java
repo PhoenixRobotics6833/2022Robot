@@ -1,16 +1,15 @@
 package frc.robot;
 
-//import edu.wpi.first.wpilibj.Encoder;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-//Code for relative encoders (we don't use relative encoders)
-/*
+
 public class RelativeEncoders {
    
     Encoder leftEncoder;
     Encoder rightEncoder;
-    double pulsesPerRevolution /*= 0.0 * /;
-    double wheelDiameterInches /*= 0.0 * /;
+    double pulsesPerRevolution = 0.0 ;
+    double wheelDiameterInches = 0.0 ;
 
     public RelativeEncoders(int lChannelA, int lChannelB, int rChannelA, int rChannelB){
         
@@ -61,4 +60,3 @@ public class RelativeEncoders {
 
     
 }
-*/

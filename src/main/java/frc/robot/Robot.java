@@ -27,7 +27,8 @@ public class Robot extends TimedRobot {
    AHRS ahrs;
    double rotateToAngle;
    double currentAngle;
-   //Auto useAuto;
+   Autonomous useAuto;
+   AutoRobotAction useRobot;
 
    // Auto
    SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -47,9 +48,11 @@ public class Robot extends TimedRobot {
 
     // Programming
     ahrs = new AHRS(SPI.Port.kMXP);
-    //useAuto = new Autonomous();
+    useRobot = new AutoRobotAction(intake, driveTrain, ahrs);
+    useAuto = new Autonomous(useRobot, ahrs, timer);
 
     autoChooser.addOption("Dump & Escape DR", "Dump & Escape DR");
+    autoChooser.addOption("Dump & Escape", "Dump & Escape");
     autoChooser.setDefaultOption("Do Nothing", "Do Nothing");
 
     SmartDashboard.putData(autoChooser);
@@ -65,7 +68,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-
+    driveTrain.SmartDashboard();
+    SmartDashboard.putNumber("Gyro Angle: ", ahrs.getAngle());
 
   }
 
@@ -79,6 +83,10 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     switch(selectedAutonomous){
       case ("Dump & Escape DR"):
+        useAuto.dumpEscapeDR();
+        break;
+      case ("Dump & Escape"):
+        useAuto.dumpEscape();
         break;
     }
   }

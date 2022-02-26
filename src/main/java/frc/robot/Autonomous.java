@@ -27,14 +27,33 @@ public class Autonomous {
         autoStep = 0;
     }
 
-    public void DumpEscapeDR() {
+    public void dumpEscapeDR() {
         if(autoStep == 0) {
             if(timer.get() < 2.0){
                 useRobot.intakeForward();
             }
             else {
                 autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 1) {
+            if(timer.get() < 5.0) {
+                useRobot.DriveBack();
+            }
+            else {
+                autoStep = 2;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
             }
         }
     }
+
+    public void dumpEscape() {
+        
+    }
+
 }

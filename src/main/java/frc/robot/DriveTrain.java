@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Timer;
 
 public class DriveTrain {
     WPI_TalonSRX leftLeader;
@@ -32,9 +31,7 @@ public class DriveTrain {
 
     double lEncoderDistance;
     double rEncoderDistance;
-    double gearRatio = 72 / 12;
 
-    Timer timer;
 
     public DriveTrain(int motor1, int motor2, int motor3, int motor4, int motor5, int motor6, Joystick controller1) {
         leftLeader = new WPI_TalonSRX(motor1);
@@ -43,8 +40,10 @@ public class DriveTrain {
         rightLeader = new WPI_TalonSRX(motor4);
         rightFollower = new WPI_TalonSRX(motor5);
         rightFollower2 = new WPI_TalonSRX(motor6);
+        rightLeader.setInverted(true);
+        rightFollower.setInverted(true);
+        rightFollower2.setInverted(true);
         
-        //timer = new Timer();
 
         controller = controller1;
 
@@ -55,8 +54,6 @@ public class DriveTrain {
 
         myDrive = new DifferentialDrive(leftLeader, rightLeader);
 
-        //timer.start();
-        //resetEncoderDistance();
     }
     
     public void TalonDrive() {
@@ -65,7 +62,7 @@ public class DriveTrain {
 
         leftStick = controller.getRawAxis(1) / (2 - throttleValue);
         rightStick = controller.getRawAxis(5) / (2 - throttleValue);
-        myDrive.tankDrive(leftStick, -rightStick);
+        myDrive.tankDrive(leftStick, rightStick);
     }
 
     public void TalonDriveNoLimiter() {
@@ -74,16 +71,16 @@ public class DriveTrain {
 
        
 
-        myDrive.tankDrive(Math.atan(leftAxis * (Math.PI/2)), -Math.atan(rightAxis * (Math.PI/2)));
+        myDrive.tankDrive(Math.atan(leftAxis * (Math.PI/2)), Math.atan(rightAxis * (Math.PI/2)));
     }
 
 // The encoder code
     public void MagEncoder() {
-        leftLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-        rightLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+        leftLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        rightLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
-        this.leftEncoder = leftLeader.getSelectedSensorVelocity(0);
-        this.rightEncoder = rightLeader.getSelectedSensorVelocity(0);
+        this.leftEncoder = leftLeader.getSelectedSensorPosition(0);
+        this.rightEncoder = rightLeader.getSelectedSensorPosition(0);
     }
 
 // Puts the encoder values onto the Smartdashboard
@@ -97,17 +94,13 @@ public class DriveTrain {
 // calculates the distance moved
     public double leftEncoderDistance() {
 
-        if(timer.advanceIfElapsed(0.1)) {
-            lEncoderDistance += (-leftEncoder / 4096) * (6 * Math.PI) / gearRatio;
-        }
+        lEncoderDistance = (leftEncoder / 4096) * 6 * Math.PI;
         return lEncoderDistance;
     }
 
     public double rightEncoderDistance() {
 
-        if(timer.advanceIfElapsed(0.1)) {
-            rEncoderDistance += (rightEncoder/4096) * (6 * Math.PI) / gearRatio;
-        }
+        rEncoderDistance = (rightEncoder / 4096) * 6 * Math.PI;
         return rEncoderDistance;
     }
 
@@ -115,7 +108,6 @@ public class DriveTrain {
     public void resetEncoderDistance() {
         lEncoderDistance = 0.0;
         rEncoderDistance = 0.0;
-        timer.reset();
     }
 
 }

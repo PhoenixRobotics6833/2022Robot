@@ -35,21 +35,21 @@ public class AutoRobotAction {
 
     public void DriveForward() {
         
-        useTalon.leftLeader.set(-0.35);
+        useTalon.leftLeader.set(0.35);
         useTalon.rightLeader.set(0.35);
 
     }
 
     public void DriveForwardSlow() {
 
-        useTalon.leftLeader.set(-0.25);
+        useTalon.leftLeader.set(0.25);
         useTalon.rightLeader.set(0.25);
 
     }
 
     public void DriveBack() {
 
-        useTalon.leftLeader.set(.35);
+        useTalon.leftLeader.set(-.35);
         useTalon.rightLeader.set(-.35);
 
     }
@@ -143,12 +143,66 @@ public class AutoRobotAction {
     }
 
 
-    double leftSpeed = -0.5;
-    double rightSpeed = 0.5;
+    // just the first driveStraight() but both motors are the same direction
+    // this was written after using the rightLeader.setInverted()
+    // the original driveStraight() was written without inverting
+    public void driveS3() {
+        straightError = Math.abs(straightTarget - ahrs.getAngle()) / 360;
+        System.out.println(ahrs.getAngle());
+
+        straightOutput = .7 * Math.sqrt(straightError);
+
+        if(ahrs.getAngle() < 0.5) {
+            //too far to the left
+            rightDrive -= .03;
+            leftDrive += .03;
+            System.out.println("drifting to the left");
+        } else if(ahrs.getAngle() > 0.5) {
+            //too far to the right
+            rightDrive += .03;
+            leftDrive -= .03;
+            System.out.println("drifting to the right");
+        } else {
+            rightDrive = .3;
+            leftDrive = .3;
+        }
+
+        if(leftDrive > .3) {
+            leftDrive = .3;
+        } else if(leftDrive < -.3) {
+            leftDrive = -.3;
+        }
+        if(rightDrive > .3) {
+            rightDrive = .3;
+        } else if(rightDrive < -.3) {
+            rightDrive = -.3;
+        }
+
+        useTalon.leftLeader.set(leftDrive);
+        useTalon.rightLeader.set(rightDrive);
+
+    }
+
     double leftCompensation = 0.0;
     double rightCompensation = 0.0;
     double myDirection = 1;
     // drives straight forward or backward
+    // direction = 1  | forward
+    // direction = -1 | backward
+    public void driveStraightEncoder(int direction) {
+
+        if(getLeftMotorVelocity() > getRightMotorVelocity()) {
+            leftCompensation -= 0.01;
+            rightCompensation += 0.01;
+        }
+        else if(getRightMotorVelocity() > getLeftMotorVelocity()) {
+            leftCompensation += 0.01;
+            rightCompensation -= 0.01;
+        }
+        useTalon.leftLeader.set((0.5 + leftCompensation) * direction);
+        useTalon.rightLeader.set((0.5 + rightCompensation) * direction);
+    }
+    /*
     public void driveStraightEncoder(String direction) {
 
         if(direction == "forward") {
@@ -187,6 +241,7 @@ public class AutoRobotAction {
         useTalon.rightLeader.set((rightSpeed + rightCompensation) * myDirection); 
 
     }
+    */
 
     // get the value of left motor velocity (negative because the motor is backward)
     public double getLeftMotorVelocity() {
@@ -258,12 +313,12 @@ public class AutoRobotAction {
 
         if (currentAngle < target - 0.5) {
             useTalon.leftLeader.set(output);
-            useTalon.rightLeader.set(output);
+            useTalon.rightLeader.set(-output);
             System.out.println("angle less than target");
 
         } else if (currentAngle > target + 0.5) {
             useTalon.leftLeader.set(-output);
-            useTalon.rightLeader.set(-output);
+            useTalon.rightLeader.set(output);
             System.out.println("angle greater than target");
 
         } else {
@@ -292,7 +347,7 @@ public class AutoRobotAction {
        // move forward
        if(distance > 0){
             if((useTalon.leftEncoderDistance() +  useTalon.rightEncoderDistance() / 2) <= distance){
-                driveStraightEncoder("forward");
+                driveStraightEncoder(1);
             }
             else {
                 useTalon.leftLeader.set(0.0);
@@ -302,7 +357,7 @@ public class AutoRobotAction {
         // move backward
         else if(distance < 0){
             if((useTalon.leftEncoderDistance() +  useTalon.rightEncoderDistance() / 2) >= distance){
-                driveStraightEncoder("backward");
+                driveStraightEncoder(-1);
             }
             else {
                 useTalon.leftLeader.set(0.0);
