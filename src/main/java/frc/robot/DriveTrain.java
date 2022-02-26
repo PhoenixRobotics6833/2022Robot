@@ -74,7 +74,7 @@ public class DriveTrain {
 
        
 
-        myDrive.tankDrive(Math.atan(leftAxis * (Math.PI/2)), -Math.atan(rightAxis * (Math.PI/2));
+        myDrive.tankDrive(Math.atan(leftAxis * (Math.PI/2)), -Math.atan(rightAxis * (Math.PI/2)));
     }
 
 // The encoder code
