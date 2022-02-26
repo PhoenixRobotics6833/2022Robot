@@ -91,7 +91,7 @@ public class DriveTrain {
         SmartDashboard.putNumber("rightDistanceInches", rightEncoderDistance());
     }
 
-// calculates the distance moved
+// calculates the distance moved in inches
     public double leftEncoderDistance() {
 
         lEncoderDistance = (leftEncoder / 4096) * 6 * Math.PI;

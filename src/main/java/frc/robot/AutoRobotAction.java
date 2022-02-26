@@ -63,7 +63,7 @@ public class AutoRobotAction {
 
 
 
-    double leftDrive = -.2;
+    double leftDrive = .2;
     double rightDrive = .2;
     double straightError;
     double straightTarget;
@@ -181,6 +181,46 @@ public class AutoRobotAction {
         useTalon.leftLeader.set(leftDrive);
         useTalon.rightLeader.set(rightDrive);
 
+    }
+
+    double backwardLeftDrive = -0.2;
+    double backwardRightDrive = -0.2;
+    public void driveStraightBackward() {
+        straightError = Math.abs(straightTarget - ahrs.getAngle()) / 360;
+        System.out.println(ahrs.getAngle());
+
+        straightOutput = .7 * Math.sqrt(straightError);
+
+        if(ahrs.getAngle() < 0.5) {
+            //too far to the left
+            backwardRightDrive += 0.03;
+            backwardLeftDrive -= .03;
+            System.out.println("Drifting to the left");
+        }
+        else if(ahrs.getAngle() > 0.5) {
+            //too far to the right
+            backwardRightDrive -= .03;
+            backwardLeftDrive += .03;
+            System.out.println("drifting to the right");
+        }
+        else {
+            backwardRightDrive = -.3;
+            backwardLeftDrive = -.3;
+        }
+
+        if(backwardLeftDrive > .3) {
+            backwardLeftDrive = .3;
+        } else if(backwardLeftDrive < -.3) {
+            backwardLeftDrive = -.3;
+        }
+        if(backwardRightDrive > .3) {
+            backwardRightDrive = .3;
+        } else if(backwardRightDrive < -.3) {
+            backwardRightDrive = -.3;
+        }
+
+        useTalon.leftLeader.set(backwardLeftDrive);
+        useTalon.rightLeader.set(backwardRightDrive);
     }
 
     double leftCompensation = 0.0;

@@ -53,7 +53,28 @@ public class Autonomous {
     }
 
     public void dumpEscape() {
-        
+        if(autoStep == 0) {
+            if(timer.get() < 2.0) {
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 2) {
+            if(timer.get() < 5.0) {
+                useRobot.driveStraightBackward();
+            }
+            else {
+                autoStep = 2;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
     }
 
 }

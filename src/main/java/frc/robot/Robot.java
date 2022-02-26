@@ -34,6 +34,7 @@ public class Robot extends TimedRobot {
    SendableChooser<String> autoChooser = new SendableChooser<>();
    String selectedAutonomous;
    Timer timer;
+   int i;
    
 
   @Override
@@ -45,11 +46,13 @@ public class Robot extends TimedRobot {
     driveTrain = new DriveTrain(0, 1, 2, 3, 4, 5, controller);
     intake = new Intake(6, controller2);
     
-
+    i=0;
     // Programming
     ahrs = new AHRS(SPI.Port.kMXP);
     useRobot = new AutoRobotAction(intake, driveTrain, ahrs);
     useAuto = new Autonomous(useRobot, ahrs, timer);
+    //ahrs.calibrate();
+    ahrs.reset();
 
     autoChooser.addOption("Dump & Escape DR", "Dump & Escape DR");
     autoChooser.addOption("Dump & Escape", "Dump & Escape");
@@ -68,9 +71,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    driveTrain.SmartDashboard();
-    SmartDashboard.putNumber("Gyro Angle: ", ahrs.getAngle());
+    driveTrain.MagEncoder();
+    SmartDashboard.putNumber("leftPosition", driveTrain.leftEncoder);
+    SmartDashboard.putNumber("rightPosition", driveTrain.rightEncoder);
+    SmartDashboard.putNumber("leftDistanceInches", driveTrain.leftEncoderDistance());
+    SmartDashboard.putNumber("rightDistanceInches", driveTrain.rightEncoderDistance());
+    SmartDashboard.putNumber("Yaw Angle: ", ahrs.getAngle());
+    SmartDashboard.putNumber("Pitch Angle: ", ahrs.getPitch());
+    SmartDashboard.putNumber("Roll Angle: ", ahrs.getRoll());
 
+    SmartDashboard.putNumber("loop num: ", i++);
   }
 
   @Override
