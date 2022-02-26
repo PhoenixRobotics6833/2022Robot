@@ -42,32 +42,59 @@ public class DriveTrain {
         leftFollower2 = new WPI_TalonSRX(motor3);
         rightLeader = new WPI_TalonSRX(motor4);
         rightFollower = new WPI_TalonSRX(motor5);
-        rightFollower = new WPI_TalonSRX(motor6);
+        rightFollower2 = new WPI_TalonSRX(motor6);
         
+        //timer = new Timer();
 
         controller = controller1;
 
         leftFollower.follow(leftLeader);
         leftFollower2.follow(leftLeader);
         rightFollower.follow(rightLeader);
-        rightFollower.follow(rightLeader);
+        rightFollower2.follow(rightLeader);
 
         myDrive = new DifferentialDrive(leftLeader, rightLeader);
 
-        timer.start();
-        resetEncoderDistance();
+        //timer.start();
+        //resetEncoderDistance();
     }
-
+    
     public void TalonDrive() {
 
         throttleValue = controller.getRawAxis(throttleAxis);
 
         leftStick = controller.getRawAxis(1) / (2 - throttleValue);
         rightStick = controller.getRawAxis(5) / (2 - throttleValue);
+        myDrive.tankDrive(leftStick, -rightStick);
     }
 
     public void TalonDriveNoLimiter() {
-        myDrive.tankDrive(controller.getRawAxis(1) * 10, controller.getRawAxis(5) * 10);
+        double leftAxis = controller.getRawAxis(1);
+        double rightAxis = controller.getRawAxis(5);
+
+        //dead zone for left stick
+        if (leftAxis > -.1 && leftAxis < .1) {
+            leftAxis = 0.0;
+        }
+        else if(leftAxis > 0.0) {
+            leftAxis = Math.log(leftAxis) + 1.0;
+        }
+        else {
+            leftAxis = -Math.log(leftAxis) - 1.0;
+        }
+
+        //dead zone for right stick
+        if (rightAxis > -.1 && rightAxis < .1) {
+            rightAxis = 0.0;
+        }
+        else if(rightAxis > 0.0) {
+            rightAxis = Math.log(rightAxis) + 1.0;
+        }
+        else {
+            rightAxis = -Math.log(rightAxis) - 1.0;
+        }
+
+        myDrive.tankDrive(leftAxis, -rightAxis);
     }
 
 // The encoder code

@@ -12,7 +12,7 @@ public class Autonomous {
     // AutoGyroAction useGyro;
     /* */
 
-    public Autonomous(/*AutoGyroAction useGyro,*/ AutoRobotAction useRobot, AHRS ahrs, Timer timer) {
+    public Autonomous(AutoRobotAction useRobot, AHRS ahrs, Timer timer) {
 
         
         //this.useGyro = useGyro;
@@ -27,10 +27,14 @@ public class Autonomous {
         autoStep = 0;
     }
 
-    public void resetDriveDistance() {
-        useRobot.resetDriveDistance();
-    }
-    public void resetGyro(){
-        useRobot.resetGyro();
+    public void DumpEscapeDR() {
+        if(autoStep == 0) {
+            if(timer.get() < 2.0){
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 1;
+            }
+        }
     }
 }

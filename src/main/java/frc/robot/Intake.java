@@ -1,18 +1,18 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
 
 
 
 public class Intake {
-    PWMVictorSPX intakeMotor;
+    WPI_TalonSRX intakeMotor;
 
     Joystick controller;
     double throttleValue;
     
     public Intake(int motor, Joystick controller2) {
-        intakeMotor = new PWMVictorSPX(motor);
+        intakeMotor = new WPI_TalonSRX(motor);
         
         controller = controller2;
     }
