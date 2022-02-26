@@ -72,29 +72,9 @@ public class DriveTrain {
         double leftAxis = controller.getRawAxis(1);
         double rightAxis = controller.getRawAxis(5);
 
-        //dead zone for left stick
-        if (leftAxis > -.1 && leftAxis < .1) {
-            leftAxis = 0.0;
-        }
-        else if(leftAxis > 0.0) {
-            leftAxis = Math.log(leftAxis) + 1.0;
-        }
-        else {
-            leftAxis = -Math.log(leftAxis) - 1.0;
-        }
+       
 
-        //dead zone for right stick
-        if (rightAxis > -.1 && rightAxis < .1) {
-            rightAxis = 0.0;
-        }
-        else if(rightAxis > 0.0) {
-            rightAxis = Math.log(rightAxis) + 1.0;
-        }
-        else {
-            rightAxis = -Math.log(rightAxis) - 1.0;
-        }
-
-        myDrive.tankDrive(leftAxis, -rightAxis);
+        myDrive.tankDrive(Math.atan(leftAxis * (Math.PI/2)), -Math.atan(rightAxis * (Math.PI/2));
     }
 
 // The encoder code
