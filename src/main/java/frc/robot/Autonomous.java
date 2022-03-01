@@ -77,4 +77,33 @@ public class Autonomous {
         }
     }
 
+    public void auto3() {
+        if(autoStep == 0) {
+            if(timer.get() < 0.0) {
+                // do something
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 1) {
+            if(timer.get() < 0.0) {
+                //do something
+            }
+            else {
+                autoStep = 2;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
+    public void auto4() {
+
+    }
+
 }
