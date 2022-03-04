@@ -4,6 +4,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Joystick;
 
 
+// 8 inch height of opening
+// 15 inch width of opening
+// ball diameter 9.5 inch
 
 public class Intake {
     WPI_TalonSRX intakeMotor;

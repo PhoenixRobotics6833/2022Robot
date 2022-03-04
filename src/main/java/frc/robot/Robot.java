@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Ultrasonic;
 
 
 public class Robot extends TimedRobot {
@@ -29,6 +30,7 @@ public class Robot extends TimedRobot {
    double currentAngle;
    Autonomous useAuto;
    AutoRobotAction useRobot;
+   Ultrasonic ultrasonic;
 
    // Auto
    SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -49,14 +51,18 @@ public class Robot extends TimedRobot {
     i=0;
     // Programming
     ahrs = new AHRS(SPI.Port.kMXP);
+    ultrasonic = new Ultrasonic(100, 101);
     useRobot = new AutoRobotAction(intake, driveTrain, ahrs);
-    useAuto = new Autonomous(useRobot, ahrs, timer);
+    useAuto = new Autonomous(useRobot, ahrs, timer, ultrasonic);
     //ahrs.calibrate();
     ahrs.reset();
 
     autoChooser.addOption("Dump & Escape DR", "Dump & Escape DR");
     autoChooser.addOption("Dump & Escape", "Dump & Escape");
     autoChooser.setDefaultOption("Do Nothing", "Do Nothing");
+    autoChooser.addOption("terminalHubStart", "terminalHubStart");
+    autoChooser.addOption("hangerHubStart", "hangerHubStart");
+    autoChooser.addOption("terminalOuterLeftBall", "terminalOuterLeftBall");
 
     SmartDashboard.putData(autoChooser);
   }
@@ -80,6 +86,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Pitch Angle: ", ahrs.getPitch());
     SmartDashboard.putNumber("Roll Angle: ", ahrs.getRoll());
 
+    SmartDashboard.putNumber("ultrasonicDistanceInches", ultrasonic.getRangeInches());
+    SmartDashboard.putNumber("ultrasonicDistanceMM", ultrasonic.getRangeMM());
+
     SmartDashboard.putNumber("loop num: ", i++);
   }
 
@@ -97,6 +106,15 @@ public class Robot extends TimedRobot {
         break;
       case ("Dump & Escape"):
         useAuto.dumpEscape();
+        break;
+      case("terminalHubStart"):
+        useAuto.terminalHubStart();
+        break;
+      case("hangerHubStart"):
+        useAuto.terminalHubStart();
+        break;
+      case("terminalOuterLeftBall"):
+        useAuto.terminalOuterLeftBall();
         break;
     }
   }
