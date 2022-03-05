@@ -64,6 +64,7 @@ public class Robot extends TimedRobot {
     autoChooser.addOption("hangerHubStart", "hangerHubStart");
     autoChooser.addOption("terminalOuterLeftBall", "terminalOuterLeftBall");
     autoChooser.addOption("terminalInnerRightBall", "terminalInnerRightBall");
+    autoChooser.addOption("hangerOuterTarmacBall", "hangerOuterTarmacBall");
     autoChooser.addOption("testDriveForward", "testDriveForward");
     autoChooser.addOption("testIntakeForward", "testIntakeForward");
     autoChooser.addOption("testRotateToAngle", "testRotateToAngle");
@@ -126,6 +127,9 @@ public class Robot extends TimedRobot {
         break;
       case("terminalInnerRightBall"):
         useAuto.terminalInnerRightBall();
+        break;
+      case("hangerOutertarmacBall"):
+        useAuto.hangerOuterTarmacBall();
         break;
       case("testDriveForward"):
         useAuto.testDriveForward();
