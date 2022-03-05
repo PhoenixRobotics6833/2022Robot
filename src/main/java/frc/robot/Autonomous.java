@@ -1,7 +1,7 @@
 package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.Ultrasonic;
+//import edu.wpi.first.wpilibj.Ultrasonic;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -10,18 +10,18 @@ public class Autonomous {
     Timer timer;
     int autoStep;
     AHRS ahrs;
-    Ultrasonic ultrasonic;
+    //Ultrasonic ultrasonic;
     // AutoGyroAction useGyro;
     /* */
 
-    public Autonomous(AutoRobotAction useRobot, AHRS ahrs, Timer timer, Ultrasonic ultrasonic) {
+    public Autonomous(AutoRobotAction useRobot, AHRS ahrs, Timer timer/*, Ultrasonic ultrasonic*/) {
 
         
         //this.useGyro = useGyro;
         this.useRobot = useRobot;
         this.ahrs = ahrs;
         this.timer = timer;
-        this.ultrasonic = ultrasonic;
+        //this.ultrasonic = ultrasonic;
         autoStep = 0;
     
       }
@@ -409,6 +409,105 @@ public class Autonomous {
             }
         }
     }
+
+    public void testDriveForward() {
+        if(autoStep == 0) {
+            if(timer.get() < 2.0) {
+                useRobot.DriveForward();
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
+    public void testIntakeForward() {
+        if(autoStep == 0) {
+            if(timer.get() < 2.0) {
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
+    public void testRotateToAngle() {
+        if(autoStep == 0) {
+            if(timer.get() < 5.0) {
+                useRobot.rotateToAngle(90);
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
     
+    public void testDriveBack() {
+        if(autoStep == 0) {
+            if(timer.get() < 2.0) {
+                useRobot.DriveBack();
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
+    public void testDriveForwardSlow() {
+        if(autoStep == 0) {
+            if(timer.get() < 2.0) {
+                useRobot.DriveForwardSlow();
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
+    public void testDriveS3() {
+        if(autoStep == 0) {
+            if(timer.get() < 2.0) {
+                useRobot.driveS3();
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+
+    }
+
+    public void testDriveStraightBackward() {
+        if(autoStep == 0) {
+            if(timer.get() < 2.0) {
+                useRobot.driveStraightBackward();
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
 
 }

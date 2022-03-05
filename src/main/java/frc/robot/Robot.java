@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Ultrasonic;
+//import edu.wpi.first.wpilibj.Ultrasonic;
 
 
 public class Robot extends TimedRobot {
@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
    double currentAngle;
    Autonomous useAuto;
    AutoRobotAction useRobot;
-   Ultrasonic ultrasonic;
+   //Ultrasonic ultrasonic;
 
    // Auto
    SendableChooser<String> autoChooser = new SendableChooser<>();
@@ -51,18 +51,26 @@ public class Robot extends TimedRobot {
     i=0;
     // Programming
     ahrs = new AHRS(SPI.Port.kMXP);
-    ultrasonic = new Ultrasonic(100, 101);
+    //ultrasonic = new Ultrasonic(9, 10);
     useRobot = new AutoRobotAction(intake, driveTrain, ahrs);
-    useAuto = new Autonomous(useRobot, ahrs, timer, ultrasonic);
+    useAuto = new Autonomous(useRobot, ahrs, timer/*, ultrasonic*/);
     //ahrs.calibrate();
     ahrs.reset();
 
+    autoChooser.setDefaultOption("Do Nothing", "Do Nothing");
     autoChooser.addOption("Dump & Escape DR", "Dump & Escape DR");
     autoChooser.addOption("Dump & Escape", "Dump & Escape");
-    autoChooser.setDefaultOption("Do Nothing", "Do Nothing");
     autoChooser.addOption("terminalHubStart", "terminalHubStart");
     autoChooser.addOption("hangerHubStart", "hangerHubStart");
     autoChooser.addOption("terminalOuterLeftBall", "terminalOuterLeftBall");
+    autoChooser.addOption("terminalInnerRightBall", "terminalInnerRightBall");
+    autoChooser.addOption("testDriveForward", "testDriveForward");
+    autoChooser.addOption("testIntakeForward", "testIntakeForward");
+    autoChooser.addOption("testRotateToAngle", "testRotateToAngle");
+    autoChooser.addOption("testDriveBack", "testDriveBack");
+    autoChooser.addOption("testDriveForwardSlow", "testDriveForwardSlow");
+    autoChooser.addOption("testDriveS3", "testDriveS3");
+    autoChooser.addOption("testDriveStraightBackward", "testDriveStraightBackward");
 
     SmartDashboard.putData(autoChooser);
   }
@@ -86,8 +94,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Pitch Angle: ", ahrs.getPitch());
     SmartDashboard.putNumber("Roll Angle: ", ahrs.getRoll());
 
-    SmartDashboard.putNumber("ultrasonicDistanceInches", ultrasonic.getRangeInches());
-    SmartDashboard.putNumber("ultrasonicDistanceMM", ultrasonic.getRangeMM());
+    //SmartDashboard.putNumber("ultrasonicDistanceInches", ultrasonic.getRangeInches());
+    //SmartDashboard.putNumber("ultrasonicDistanceMM", ultrasonic.getRangeMM());
 
     SmartDashboard.putNumber("loop num: ", i++);
   }
@@ -116,16 +124,56 @@ public class Robot extends TimedRobot {
       case("terminalOuterLeftBall"):
         useAuto.terminalOuterLeftBall();
         break;
+      case("terminalInnerRightBall"):
+        useAuto.terminalInnerRightBall();
+        break;
+      case("testDriveForward"):
+        useAuto.testDriveForward();
+        break;
+      case("testIntakeForward"):
+        useAuto.testIntakeForward();
+        break;
+      case("testRotateToAngle"):
+        useAuto.testRotateToAngle();
+        break;
+      case("testDriveBack"):
+        useAuto.testDriveBack();
+        break;
+      case("testDriveForwardSlow"):
+        useAuto.testDriveForwardSlow();
+        break;
+      case("testDriveS3"):
+        useAuto.testDriveS3();
+        break;
+      case("testDriveStraightBackward"):
+        useAuto.testDriveStraightBackward();
+        break;
     }
   }
 
 
+  int driveTrainMode = 0;
   @Override
   public void teleopPeriodic() {
     System.out.println("teleop loop");
     //driveTrain.TalonDrive();
     intake.intakeControl();
-    driveTrain.TalonDriveNoLimiter();
+
+    if(controller.getRawButton(7)) {
+      driveTrainMode = 0;
+    }
+    else if(controller.getRawButton(8)) {
+      driveTrainMode = 1;
+    }
+
+    if(driveTrainMode == 0) {
+      driveTrain.TalonDriveNoLimiter();
+    }
+    else if(driveTrainMode == 1) {
+      driveTrain.talonDriveThrottle();
+    }
+
+    
 
     /*
     if(controller.getRawAxis(2) > .5) {

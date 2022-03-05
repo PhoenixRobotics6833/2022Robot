@@ -74,6 +74,29 @@ public class DriveTrain {
         myDrive.tankDrive(Math.atan(leftAxis * (Math.PI/2)), Math.atan(rightAxis * (Math.PI/2)));
     }
 
+    public void talonDriveThrottle() {
+        throttleValue = controller.getRawAxis(throttleAxis);
+
+        double leftAxis = controller.getRawAxis(1);
+        double rightAxis = controller.getRawAxis(5);
+
+        int leftDirection = 1;
+        int rightDirection = 1;
+
+        if(leftAxis < 0) {
+            leftDirection = -1;
+        }
+        //else {
+        //    leftDirection = 1;
+        //}
+        if(rightAxis < 0) {
+            rightDirection = -1;
+        }
+
+        myDrive.tankDrive(leftAxis/2 + leftDirection * throttleValue/2, rightAxis/2 + rightDirection * throttleValue/2);
+
+    }
+
 // The encoder code
     public void MagEncoder() {
         leftLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
