@@ -102,8 +102,9 @@ public class DriveTrain {
         leftLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         rightLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
-        this.leftEncoder = leftLeader.getSelectedSensorPosition(0);
-        this.rightEncoder = rightLeader.getSelectedSensorPosition(0);
+        //this.leftEncoder = leftLeader.getSelectedSensorPosition(0);
+        //this.rightEncoder = rightLeader.getSelectedSensorPosition(0);
+        
     }
 
 // Puts the encoder values onto the Smartdashboard

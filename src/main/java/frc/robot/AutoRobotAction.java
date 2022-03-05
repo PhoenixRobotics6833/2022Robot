@@ -344,21 +344,21 @@ public class AutoRobotAction {
         error = Math.abs((target - currentAngle)) / 360;
         System.out.println("current angle: " + currentAngle);
 
-        sumError = sumError + error * .02;
+        sumError = sumError + error * .03;
 
         System.out.println("sumError: " + sumError);
 
-        output = .7 * Math.sqrt(error);
+        output = .95 * Math.sqrt(error);
         System.out.println("output: " + output);
 
         if (currentAngle < target - 0.5) {
-            useTalon.leftLeader.set(output);
-            useTalon.rightLeader.set(-output);
+            useTalon.leftLeader.set(-output);
+            useTalon.rightLeader.set(output);
             System.out.println("angle less than target");
 
         } else if (currentAngle > target + 0.5) {
-            useTalon.leftLeader.set(-output);
-            useTalon.rightLeader.set(output);
+            useTalon.leftLeader.set(output);
+            useTalon.rightLeader.set(-output);
             System.out.println("angle greater than target");
 
         } else {

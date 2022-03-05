@@ -525,6 +525,7 @@ public class Autonomous {
         if(autoStep == 0) {
             if(timer.get() < 2.0) {
                 useRobot.DriveForward();
+                System.out.println("here");
             }
             else {
                 autoStep = 1;
@@ -552,7 +553,7 @@ public class Autonomous {
     public void testRotateToAngle() {
         if(autoStep == 0) {
             if(timer.get() < 5.0) {
-                useRobot.rotateToAngle(90);
+                useRobot.rotateToAngle(-90);
             }
             else {
                 autoStep = 1;
@@ -570,6 +571,18 @@ public class Autonomous {
             }
             else {
                 autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 1) {
+            if(timer.get() < 0.2) {
+                useRobot.useTalon.leftLeader.set(0.2);
+                useRobot.useTalon.rightLeader.set(0.2);
+            }
+            else {
+                autoStep = 2;
                 timer.reset();
                 timer.start();
                 ahrs.reset();

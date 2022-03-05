@@ -57,6 +57,7 @@ public class Robot extends TimedRobot {
     driveTrain = new DriveTrain(0, 1, 2, 3, 4, 5, controller);
     intake = new Intake(6, controller2);
     
+    timer = new Timer();
     i=0;
     // Programming
     ahrs = new AHRS(SPI.Port.kMXP);
@@ -64,7 +65,7 @@ public class Robot extends TimedRobot {
     useRobot = new AutoRobotAction(intake, driveTrain, ahrs);
     useAuto = new Autonomous(useRobot, ahrs, timer/*, ultrasonic*/);
     //ahrs.calibrate();
-    ahrs.reset();
+    //ahrs.reset();
 
     //Camera vision
     m_visionThread =
@@ -134,7 +135,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    driveTrain.MagEncoder();
+    //driveTrain.MagEncoder();
     SmartDashboard.putNumber("leftPosition", driveTrain.leftEncoder);
     SmartDashboard.putNumber("rightPosition", driveTrain.rightEncoder);
     SmartDashboard.putNumber("leftDistanceInches", driveTrain.leftEncoderDistance());
@@ -152,6 +153,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     selectedAutonomous = autoChooser.getSelected();
+    ahrs.reset();
+    timer.reset();
     timer.start();
   }
 
