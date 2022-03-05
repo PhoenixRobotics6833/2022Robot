@@ -325,4 +325,90 @@ public class Autonomous {
             
     }
 
+    public void terminalInnerRightBall(){
+        if(autoStep == 0){
+            if (timer.get() < 1.5){
+                useRobot.DriveForward();
+            }
+            else{
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+         
+
+        }
+        else if(autoStep == 1){
+            if(timer.get() <0.5){
+                useRobot.intakeForward();
+                useRobot.DriveForward();
+
+            }
+            else{
+                autoStep = 2;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+
+            }
+        else if(autoStep == 2){
+            if(timer.get() < 5.0){
+                useRobot.rotateToAngle(180);
+            }
+            else{
+                autoStep = 3;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 3){
+            if(timer.get() < 3.0){
+                useRobot.DriveForward();
+            }          
+            else {
+                autoStep = 4;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }  
+        }
+        else if (autoStep == 4){
+            if(timer.get() < 5.0){
+                useRobot.rotateToAngle(20);
+            }
+            else {
+                autoStep = 5;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if (autoStep == 5){
+            if(timer.get() < 2.0){
+                useRobot.DriveForward();
+            }
+            else {
+                autoStep = 6;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if (autoStep == 6){
+            if (timer.get() < 1.0){
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 7;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+    
+
 }
