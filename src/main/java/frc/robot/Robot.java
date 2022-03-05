@@ -4,38 +4,143 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * This is a demo program showing the use of the DifferentialDrive class, specifically it contains
- * the code necessary to operate a robot with tank drive.
- */
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Ultrasonic;
+
+
 public class Robot extends TimedRobot {
-  private DifferentialDrive m_myRobot;
-  private Joystick m_leftStick;
-  private Joystick m_rightStick;
+   // Mechanical
+   Joystick controller;
+   Joystick controller2;
+   DriveTrain driveTrain;
+   Intake intake;
 
-  private final MotorController m_leftMotor = new PWMSparkMax(0);
-  private final MotorController m_rightMotor = new PWMSparkMax(1);
+   // Programming
+   NetworkTableInstance table = NetworkTableInstance.getDefault();
+   AHRS ahrs;
+   double rotateToAngle;
+   double currentAngle;
+   Autonomous useAuto;
+   AutoRobotAction useRobot;
+   Ultrasonic ultrasonic;
+
+   // Auto
+   SendableChooser<String> autoChooser = new SendableChooser<>();
+   String selectedAutonomous;
+   Timer timer;
+   int i;
+   
 
   @Override
   public void robotInit() {
-    // We need to invert one side of the drivetrain so that positive voltages
-    // result in both sides moving forward. Depending on how your robot's
-    // gearbox is constructed, you might have to invert the left side instead.
-    m_rightMotor.setInverted(true);
 
-    m_myRobot = new DifferentialDrive(m_leftMotor, m_rightMotor);
-    m_leftStick = new Joystick(0);
-    m_rightStick = new Joystick(1);
+    // Mechanical
+    controller = new Joystick(0);
+    controller2 = new Joystick(1);
+    driveTrain = new DriveTrain(0, 1, 2, 3, 4, 5, controller);
+    intake = new Intake(6, controller2);
+    
+    i=0;
+    // Programming
+    ahrs = new AHRS(SPI.Port.kMXP);
+    ultrasonic = new Ultrasonic(100, 101);
+    useRobot = new AutoRobotAction(intake, driveTrain, ahrs);
+    useAuto = new Autonomous(useRobot, ahrs, timer, ultrasonic);
+    //ahrs.calibrate();
+    ahrs.reset();
+
+    autoChooser.addOption("Dump & Escape DR", "Dump & Escape DR");
+    autoChooser.addOption("Dump & Escape", "Dump & Escape");
+    autoChooser.setDefaultOption("Do Nothing", "Do Nothing");
+    autoChooser.addOption("terminalHubStart", "terminalHubStart");
+    autoChooser.addOption("hangerHubStart", "hangerHubStart");
+    autoChooser.addOption("terminalOuterLeftBall", "terminalOuterLeftBall");
+
+    SmartDashboard.putData(autoChooser);
+  }
+
+
+  @Override
+  public void disabledPeriodic() {
+
+    
+
   }
 
   @Override
-  public void teleopPeriodic() {
-    m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+  public void robotPeriodic() {
+    driveTrain.MagEncoder();
+    SmartDashboard.putNumber("leftPosition", driveTrain.leftEncoder);
+    SmartDashboard.putNumber("rightPosition", driveTrain.rightEncoder);
+    SmartDashboard.putNumber("leftDistanceInches", driveTrain.leftEncoderDistance());
+    SmartDashboard.putNumber("rightDistanceInches", driveTrain.rightEncoderDistance());
+    SmartDashboard.putNumber("Yaw Angle: ", ahrs.getAngle());
+    SmartDashboard.putNumber("Pitch Angle: ", ahrs.getPitch());
+    SmartDashboard.putNumber("Roll Angle: ", ahrs.getRoll());
+
+    SmartDashboard.putNumber("ultrasonicDistanceInches", ultrasonic.getRangeInches());
+    SmartDashboard.putNumber("ultrasonicDistanceMM", ultrasonic.getRangeMM());
+
+    SmartDashboard.putNumber("loop num: ", i++);
   }
+
+  @Override
+  public void autonomousInit() {
+    selectedAutonomous = autoChooser.getSelected();
+    timer.start();
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+    switch(selectedAutonomous){
+      case ("Dump & Escape DR"):
+        useAuto.dumpEscapeDR();
+        break;
+      case ("Dump & Escape"):
+        useAuto.dumpEscape();
+        break;
+      case("terminalHubStart"):
+        useAuto.terminalHubStart();
+        break;
+      case("hangerHubStart"):
+        useAuto.terminalHubStart();
+        break;
+      case("terminalOuterLeftBall"):
+        useAuto.terminalOuterLeftBall();
+        break;
+    }
+  }
+
+
+  @Override
+  public void teleopPeriodic() {
+    System.out.println("teleop loop");
+    //driveTrain.TalonDrive();
+    intake.intakeControl();
+    driveTrain.TalonDriveNoLimiter();
+
+    /*
+    if(controller.getRawAxis(2) > .5) {
+      driveTrain.TalonDriveNoLimiter();
+
+    } else {
+      driveTrain.TalonDrive();
+    }
+    */
+  }
+
+  
+  @Override
+  public void testPeriodic() {
+
+  }
+  
 }
