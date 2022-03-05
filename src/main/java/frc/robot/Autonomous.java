@@ -30,6 +30,34 @@ public class Autonomous {
         autoStep = 0;
     }
 
+    public void taxiBackward() {
+        if(autoStep == 0) {
+            if(timer.get() < 5.0) {
+                useRobot.DriveBack();
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
+    public void taxiForward() {
+        if(autoStep == 0) {
+            if(timer.get() < 5.0) {
+                useRobot.DriveForward();
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
     public void dumpEscapeDR() {
         if(autoStep == 0) {
             if(timer.get() < 2.0){
