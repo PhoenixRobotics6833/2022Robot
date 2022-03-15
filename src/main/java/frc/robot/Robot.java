@@ -30,6 +30,7 @@ public class Robot extends TimedRobot {
    Joystick controller2;
    DriveTrain driveTrain;
    Intake intake;
+   Lift lift;
 
    // Programming
    NetworkTableInstance table = NetworkTableInstance.getDefault();
@@ -56,6 +57,8 @@ public class Robot extends TimedRobot {
     controller2 = new Joystick(1);
     driveTrain = new DriveTrain(0, 1, 2, 3, 4, 5, controller);
     intake = new Intake(6, controller2);
+    //lift = new Lift(1, 2, controller2);
+
     
     timer = new Timer();
     i=0;
@@ -234,6 +237,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //driveTrain.TalonDri+---ve();
     intake.intakeControl();
+    //lift.liftControl();
 
 
     if(controller.getRawButton(7)) {
