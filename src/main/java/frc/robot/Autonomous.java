@@ -32,7 +32,7 @@ public class Autonomous {
 
     public void taxiBackward() {
         if(autoStep == 0) {
-            if(timer.get() < 5.0) {
+            if(timer.get() < 3.0) {
                 useRobot.DriveBack();
             }
             else {
@@ -60,8 +60,8 @@ public class Autonomous {
 
     public void dumpEscapeDR() {
         if(autoStep == 0) {
-            if(timer.get() < 2.0){
-                useRobot.intakeForward();
+            if(timer.get() < 1.0) {
+                useRobot.DriveForward();
             }
             else {
                 autoStep = 1;
@@ -71,21 +71,44 @@ public class Autonomous {
             }
         }
         else if(autoStep == 1) {
-            if(timer.get() < 5.0) {
-                useRobot.DriveBack();
+            if(timer.get() < 1.0){
+                useRobot.intakeForward();
             }
             else {
                 autoStep = 2;
+                useRobot.intakeStop();
                 timer.reset();
                 timer.start();
                 ahrs.reset();
             }
         }
+        else if(autoStep == 2) {
+            if(timer.get() < 5.0) {
+                useRobot.DriveBack();
+            }
+            else {
+                autoStep = 3;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 2) {
+            if(timer.get() < 0.5) {
+                useRobot.DriveForward();
+            }
+        }
+        else {
+            autoStep = 3;
+            timer.reset();
+            timer.start();
+            ahrs.reset();
+        }
     }
 
     public void dumpEscape() {
         if(autoStep == 0) {
-            if(timer.get() < 2.0) {
+            if(timer.get() < 1.0) {
                 useRobot.intakeForward();
             }
             else {
@@ -110,7 +133,7 @@ public class Autonomous {
 
     public void DumpPickUp() {
         if(autoStep == 0) {
-            if(timer.get() < 2.0) {
+            if(timer.get() < 1.0) {
                 useRobot.intakeForward();
             }
             else {
@@ -160,10 +183,10 @@ public class Autonomous {
     // the robot is right up against the hub
     // 1. dumps the ball into the hub
     // 2. drives out towards the ball
-    public void terminalHubStart() {
+    public void hangarHubStart() {
 
         if(autoStep == 0) {
-            if(timer.get() < 2.0) {
+            if(timer.get() < 1.0) {
                 useRobot.intakeForward();
             }
             else {
@@ -171,22 +194,25 @@ public class Autonomous {
                 timer.reset();
                 timer.start();
                 ahrs.reset();
+                useRobot.intakeStop();
             }
         }
         else if(autoStep == 1) {
-            if(timer.get() < 2.0) {
-                useRobot.DriveBack();
+            if(timer.get() < 3.0) {
+                //useRobot.DriveBack();
+                useRobot.travelDistance(-80.0);
             }
             else {
                 autoStep = 2;
                 timer.reset();
                 timer.start();
                 ahrs.reset();
+                useRobot.resetEncoders();
             }
         }
         else if(autoStep == 2) {
-            if(timer.get() < 5.0) {
-                useRobot.rotateToAngle(160);
+            if(timer.get() < 0.5) {
+                useRobot.DriveForward();
             }
             else {
                 autoStep = 3;
@@ -197,7 +223,7 @@ public class Autonomous {
         }
         else if(autoStep == 3) {
             if(timer.get() < 5.0) {
-                useRobot.driveS3();
+                useRobot.myRotate(-160);
             }
             else {
                 autoStep = 4;
@@ -206,6 +232,34 @@ public class Autonomous {
                 ahrs.reset();
             }
         }
+        else if(autoStep == 4) {
+            if(timer.get() < 2.0) {
+                useRobot.travelDistance(38.0);
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 5;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+                useRobot.resetEncoders();
+                useRobot.intakeStop();
+            }
+        }
+        /*
+        else if(autoStep == 5) {
+            if(timer.get() < 1.0) {
+                useRobot.DriveForward();
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 6;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+                useRobot.intakeStop();
+            }
+        }*/
     }
 
     // start on the tarmac on the hanger side
@@ -213,9 +267,10 @@ public class Autonomous {
     // the robot is right up against the hub
     // 1. dumps the ball into the hub
     // 2. drives out towards the ball
-    public void hangerHubStart() {
+    public void terminalHubStart() {
+
         if(autoStep == 0) {
-            if(timer.get() < 2.0){
+            if(timer.get() < 1.0) {
                 useRobot.intakeForward();
             }
             else {
@@ -223,22 +278,24 @@ public class Autonomous {
                 timer.reset();
                 timer.start();
                 ahrs.reset();
+                useRobot.intakeStop();
             }
         }
         else if(autoStep == 1) {
             if(timer.get() < 2.0) {
-                useRobot.DriveBack();
+                useRobot.travelDistance(-43.0);
             }
             else {
                 autoStep = 2;
                 timer.reset();
                 timer.start();
                 ahrs.reset();
+                useRobot.resetEncoders();
             }
         }
         else if(autoStep == 2) {
             if(timer.get() < 5.0) {
-                useRobot.rotateToAngle(-160);
+                useRobot.myRotate(160);
             }
             else {
                 autoStep = 3;
@@ -248,17 +305,30 @@ public class Autonomous {
             }
         }
         else if(autoStep == 3) {
-            if(timer.get() < 5.0) {
-                useRobot.driveS3();
+            if(timer.get() < 2.0) {
+                useRobot.travelDistance(38.0);
             }
             else {
                 autoStep = 4;
                 timer.reset();
                 timer.start();
                 ahrs.reset();
+                useRobot.resetEncoders();
             }
         }
-        
+        else if(autoStep == 4) {
+            if(timer.get() < 1.0) {
+                useRobot.DriveForward();
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 5;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+                useRobot.intakeStop();
+            }
+        }
     }
 
     // starts in tarmac closest to the left ball near the player terminal. 
@@ -339,7 +409,7 @@ public class Autonomous {
         
         }
         else if (autoStep == 6){
-            if(timer.get()< 2){
+            if(timer.get()< 1.0){
                 useRobot.intakeForward();
             }
             else {
@@ -525,7 +595,6 @@ public class Autonomous {
         if(autoStep == 0) {
             if(timer.get() < 2.0) {
                 useRobot.DriveForward();
-                System.out.println("here");
             }
             else {
                 autoStep = 1;
@@ -546,6 +615,7 @@ public class Autonomous {
                 timer.reset();
                 timer.start();
                 ahrs.reset();
+                useRobot.intakeStop();
             }
         }
     }
@@ -633,5 +703,274 @@ public class Autonomous {
         }
     }
 
+    public void testMyRotate() {
+        if(autoStep == 0) {
+            if(timer.get() < 10.0) {
+                useRobot.myRotate(90);
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
+    public void testTravelDistance() {
+        if(autoStep == 0) {
+            if(timer.get() < 10.0) {
+                useRobot.travelDistance(20.0);
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
+    public void testTravelDistanceStraight() {
+        if(autoStep == 0) {
+            if(timer.get() < 10.0) {
+                useRobot.travelDistanceStraight(20.0);
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
+    public void testMyDriveStraight() {
+        if(autoStep == 0) {
+            if(timer.get() < 10.0) {
+                useRobot.myDriveStraight();
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+    }
+
+    // start in front of the ball on the hanger side
+    public void startPosition1() {
+
+        if(autoStep == 0) {
+            if(timer.get() < 2.0) {
+                useRobot.travelDistance(43.0);
+                //useRobot.travelDistanceStraight(43.0);
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+                useRobot.resetEncoders();
+            }
+        }
+        else if(autoStep == 1) {
+            if(timer.get() < 0.5) {
+                useRobot.DriveBack();
+            }
+            else {
+                autoStep = 2;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+
+        }
+        else if(autoStep == 2) {
+            if(timer.get() < 1.0) {
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 3;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 3) {
+            if(timer.get() < 2.0) {
+                useRobot.travelDistance(-43.0);
+            }
+            else {
+                autoStep = 4;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+                useRobot.resetEncoders();
+            }
+        }
+        else if(autoStep == 4) {
+            if(timer.get() < 0.5) {
+                useRobot.DriveForward();
+            }
+            else {
+                autoStep = 5;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 5) {
+            if(timer.get() < 5.0) {
+                useRobot.myRotate(180);
+            }
+            else {
+                autoStep = 6;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 6) {
+            if(timer.get() < 2.0) {
+                useRobot.travelDistance(38.0);
+            }
+            else {
+                autoStep = 7;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+                useRobot.resetEncoders();
+            }
+        }
+        else if(autoStep == 7) {
+            if(timer.get() < 1.0) {
+                useRobot.DriveForward();
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 8;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+
+            }
+        }
+    }
+
+    // start in front of the left ball on the terminal side
+    public void startPosition2() {
+
+        if(autoStep == 0) {
+            if(timer.get() < 2.0) {
+                useRobot.travelDistance(43.0);
+                //useRobot.travelDistanceStraight(43.0);
+            }
+            else {
+                autoStep = 1;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+                useRobot.resetEncoders();
+            }
+        }
+        else if(autoStep == 1) {
+            if(timer.get() < 0.5) {
+                useRobot.DriveBack();
+            }
+            else {
+                autoStep = 2;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+
+        }
+        else if(autoStep == 2) {
+            if(timer.get() < 1.0) {
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 3;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 3) {
+            if(timer.get() < 2.0) {
+                useRobot.travelDistance(-43.0);
+            }
+            else {
+                autoStep = 4;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+                useRobot.resetEncoders();
+            }
+        }
+        else if(autoStep == 4) {
+            if(timer.get() < 0.5) {
+                useRobot.DriveForward();
+            }
+            else {
+                autoStep = 5;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 5) {
+            if(timer.get() < 5.0) {
+                useRobot.myRotate(180);
+            }
+            else {
+                autoStep = 6;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+            }
+        }
+        else if(autoStep == 6) {
+            if(timer.get() < 2.0) {
+                useRobot.travelDistance(38.0);
+            }
+            else {
+                autoStep = 7;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+                useRobot.resetEncoders();
+            }
+        }
+        else if(autoStep == 7) {
+            if(timer.get() < 1.0) {
+                useRobot.DriveForward();
+                useRobot.intakeForward();
+            }
+            else {
+                autoStep = 8;
+                timer.reset();
+                timer.start();
+                ahrs.reset();
+                
+            }
+        }
+    }
+
+    // start in front of the right ball on the terminal side
+    public void startPosition3() {
+
+        if(autoStep == 1) {
+
+        }
+        else if(autoStep == 2) {
+
+        }
+        else if(autoStep == 3) {
+            
+        }
+    }
 
 }

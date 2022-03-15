@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.kauailabs.navx.frc.AHRS;
 
 public class DriveTrain {
     WPI_TalonSRX leftLeader;
@@ -65,13 +66,14 @@ public class DriveTrain {
         myDrive.tankDrive(leftStick, rightStick);
     }
 
-    public void TalonDriveNoLimiter() {
+    // The talon axis input to speed output is a x^3 curve
+    public void TalonDriveCubic() {
         double leftAxis = controller.getRawAxis(1);
         double rightAxis = controller.getRawAxis(5);
 
        
 
-        myDrive.tankDrive(Math.atan(leftAxis * (Math.PI/2)), Math.atan(rightAxis * (Math.PI/2)));
+        myDrive.tankDrive(Math.pow(leftAxis, 3), Math.pow(rightAxis, 3));
     }
 
     public void talonDriveThrottle() {
@@ -93,11 +95,17 @@ public class DriveTrain {
             rightDirection = -1;
         }
 
-        myDrive.tankDrive(leftAxis/2 + leftDirection * throttleValue/2, rightAxis/2 + rightDirection * throttleValue/2);
+        double leftDrive = (3 * leftAxis/4) + leftDirection * throttleValue/4;
+        double rightDrive = (3 * rightAxis/4) + rightDirection * throttleValue/4;
+
+        System.out.println("LeftDrive: " + leftDrive);
+        System.out.println("RightDrive: " + rightDrive);
+        myDrive.tankDrive(leftDrive, rightDrive);
 
     }
 
 // The encoder code
+// deprecated
     public void MagEncoder() {
         leftLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         rightLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
@@ -107,31 +115,82 @@ public class DriveTrain {
         
     }
 
+    // we only have the right encoder on the robot
+    // the left encoder broke
+    public void encoders() {
+        rightLeader.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+
+        this.rightEncoder = rightLeader.getSelectedSensorPosition(0);
+    }
+
 // Puts the encoder values onto the Smartdashboard
     public void SmartDashboard() {
         SmartDashboard.putNumber("leftVelocity", leftEncoder);
         SmartDashboard.putNumber("rightVelocity", rightEncoder);
-        SmartDashboard.putNumber("leftDistanceInches", leftEncoderDistance());
-        SmartDashboard.putNumber("rightDistanceInches", rightEncoderDistance());
+        //SmartDashboard.putNumber("leftDistanceInches", leftEncoderDistance());
+        SmartDashboard.putNumber("rightDistanceInches", getRightEncoderDistance());
     }
 
 // calculates the distance moved in inches
-    public double leftEncoderDistance() {
+    /*public double leftEncoderDistance() {
 
         lEncoderDistance = (leftEncoder / 4096) * 6 * Math.PI;
         return lEncoderDistance;
     }
+    */
 
-    public double rightEncoderDistance() {
-
+    public double getRightEncoderDistance() {
+        rightEncoder = rightLeader.getSelectedSensorPosition(0);
         rEncoderDistance = (rightEncoder / 4096) * 6 * Math.PI;
         return rEncoderDistance;
     }
 
 // sets the encoder distance to 0
-    public void resetEncoderDistance() {
-        lEncoderDistance = 0.0;
+    public void resetEncoders() {
+        //lEncoderDistance = 0.0;
         rEncoderDistance = 0.0;
+        rightLeader.setSelectedSensorPosition(0);
+    }
+
+    double leftDrive = -0.95;
+    double rightDrive = -0.95;
+
+    public void chargeStraight(AHRS ahrs) {
+        if(ahrs.getAngle() < -0.5) {
+            //too far to the left
+            rightDrive += .03;
+            leftDrive -= .03;
+
+        }
+        else if(ahrs.getAngle() > 0.5) {
+            //too far to the right
+            rightDrive -= .03;
+            leftDrive += .03;
+        }
+        else {
+            rightDrive = -0.95;
+            leftDrive = -0.95;
+        }
+
+        // if too fast or too slow
+        // reset back to default
+        if(leftDrive > -0.9) {
+            leftDrive = -0.95;
+        }
+        else if(leftDrive < -1.0) {
+            leftDrive = -0.95;
+        }
+
+        if(rightDrive > -0.9) {
+            rightDrive = -0.95;
+        }
+        else if(rightDrive < -1.0) {
+            rightDrive = -0.95;
+        }
+
+        leftLeader.set(leftDrive);
+        rightLeader.set(rightDrive);
+        
     }
 
 }

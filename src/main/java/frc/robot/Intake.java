@@ -21,20 +21,13 @@ public class Intake {
     }
 
     public void intakeControl() {
-        // throttle right bumper
-        if(controller.getRawButton(6) == true){
-            throttleValue = 0.2;
-        }
-        else {
-            throttleValue = 0.0;
-        }
-        // left trigger / forward 
-        if(controller.getRawAxis(2) > 0.5) {
-            intakeMotor.set(0.8 + throttleValue);
+        // left trigger / reverse
+        if(controller.getRawAxis(2) > 0.2) {
+            intakeMotor.set(-controller.getRawAxis(2));
         } 
-        // right trigger / reverse
-        else if(controller.getRawAxis(3) > 0.5) {
-            intakeMotor.set(-(0.8 + throttleValue));
+        // right trigger / forward
+        else if(controller.getRawAxis(3) > 0.2) {
+            intakeMotor.set(controller.getRawAxis(3));
         }
         // no button / do nothing
         else {

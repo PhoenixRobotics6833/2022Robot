@@ -20,37 +20,38 @@ public class AutoRobotAction {
     
     public void intakeForward(){
         
-        useIntake.intakeMotor.set(0.8);
+        useIntake.intakeMotor.set(1.0);
     }
+
     
-    public void IntakeReverse() {
+    public void intakeReverse() {
 
         useIntake.intakeMotor.set(-0.8);
     }
     
-    public void IntakeStop() {
+    public void intakeStop() {
 
         useIntake.intakeMotor.set(0.0);
     }
 
     public void DriveForward() {
         
-        useTalon.leftLeader.set(0.35);
-        useTalon.rightLeader.set(0.35);
+        useTalon.leftLeader.set(-0.35);
+        useTalon.rightLeader.set(-0.35);
 
     }
 
     public void DriveForwardSlow() {
 
-        useTalon.leftLeader.set(0.25);
-        useTalon.rightLeader.set(0.25);
+        useTalon.leftLeader.set(-0.25);
+        useTalon.rightLeader.set(-0.25);
 
     }
 
     public void DriveBack() {
 
-        useTalon.leftLeader.set(-.35);
-        useTalon.rightLeader.set(-.35);
+        useTalon.leftLeader.set(.35);
+        useTalon.rightLeader.set(.35);
 
     }
 
@@ -369,17 +370,32 @@ public class AutoRobotAction {
         }
     }
 
+    public void myRotate(double target) {
+        currentAngle = ahrs.getAngle();
+        
+        // stop when the angle is within 1 degree of the target
+        if(Math.abs(currentAngle - target) < 1) {
+            useTalon.leftLeader.set(0.0);
+            useTalon.rightLeader.set(0.0);
+        }
+        // turn left for negative target angle
+        else if(target < currentAngle) {
+           useTalon.leftLeader.set(0.8);
+           useTalon.rightLeader.set(-0.8);
+        }
+        // turn right for positive target angle
+        else if(target > currentAngle) {
+            useTalon.leftLeader.set(-0.8);
+            useTalon.rightLeader.set(0.8);
+        }
 
-/*
-    public void resetTurning() {
-        isDone = false;
-        isTurning = false;
     }
-    */
 
-    boolean isMoving = false;
+
+
+    //boolean isMoving = false;
     // drives forwards (+) or backwards (-) in inches
-    public void driveDistance(double distance) {
+    /*public void driveDistance(double distance) {
         if(!isMoving){
             useTalon.resetEncoderDistance();
             isMoving = true;
@@ -407,5 +423,84 @@ public class AutoRobotAction {
     }
     public void resetDriveDistance() {
         isMoving = false;
+    }
+    */
+
+    public void travelDistance(double distance) {
+
+        if(distance > 0) {
+            if(useTalon.getRightEncoderDistance() < distance) {
+                useTalon.leftLeader.set(-0.35);
+                useTalon.rightLeader.set(-0.35);
+            }
+            else {
+                useTalon.leftLeader.set(0.0);
+                useTalon.rightLeader.set(0.0);
+            }
+        }
+        else if(distance < 0) {
+            if(useTalon.getRightEncoderDistance() > distance) {
+                useTalon.leftLeader.set(0.35);
+                useTalon.rightLeader.set(0.35);
+            }
+            else {
+                useTalon.leftLeader.set(0.0);
+                useTalon.rightLeader.set(0.0);
+            }
+        }
+        
+    }
+
+    public void resetEncoders() {
+        useTalon.resetEncoders();
+    }
+
+    public void travelDistanceStraight(double distance) {
+        if(useTalon.getRightEncoderDistance() < distance) {
+           myDriveStraight();
+        }
+        else {
+            useTalon.leftLeader.set(0.0);
+            useTalon.rightLeader.set(0.0);
+        }
+    }
+
+    double myRightDrive = -0.4;
+    double myLeftDrive = -0.4;
+    public void myDriveStraight() {
+        if(ahrs.getAngle() < -0.5) {
+            //too far to the left
+            myRightDrive += .03;
+            myLeftDrive -= .03;
+
+        }
+        else if(ahrs.getAngle() > 0.5) {
+            //too far to the right
+            myRightDrive -= .03;
+            myLeftDrive += .03;
+        }
+        else {
+            myRightDrive = -0.8;
+            myLeftDrive = -0.8;
+        }
+
+        // if too fast or too slow
+        // reset back to default
+        if(myLeftDrive > -0.3) {
+            myLeftDrive = -0.4;
+        }
+        else if(myLeftDrive < -0.5) {
+            myLeftDrive = -0.4;
+        }
+
+        if(myRightDrive > -0.3) {
+            myRightDrive = -0.4;
+        }
+        else if(myRightDrive < -0.5) {
+            myRightDrive = -0.4;
+        }
+
+        useTalon.leftLeader.set(myLeftDrive);
+        useTalon.rightLeader.set(myRightDrive);
     }
 }

@@ -66,6 +66,7 @@ public class Robot extends TimedRobot {
     useAuto = new Autonomous(useRobot, ahrs, timer/*, ultrasonic*/);
     //ahrs.calibrate();
     //ahrs.reset();
+    driveTrain.encoders();
 
     //Camera vision
     m_visionThread =
@@ -121,6 +122,11 @@ public class Robot extends TimedRobot {
     autoChooser.addOption("testDriveForwardSlow", "testDriveForwardSlow");
     autoChooser.addOption("testDriveS3", "testDriveS3");
     autoChooser.addOption("testDriveStraightBackward", "testDriveStraightBackward");
+    autoChooser.addOption("testMyRotate", "testMyRotate");
+    autoChooser.addOption("testTravelDistance", "testTravelDistance");
+    autoChooser.addOption("testMyDriveStraight", "testMyDriveStraight");
+    autoChooser.addOption("testTravelDistanceStraight", "testTravelDistanceStraight");
+    autoChooser.addOption("startPosition1", "startPosition1");
 
     SmartDashboard.putData(autoChooser);
   }
@@ -136,10 +142,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     //driveTrain.MagEncoder();
-    SmartDashboard.putNumber("leftPosition", driveTrain.leftEncoder);
+    //SmartDashboard.putNumber("leftPosition", driveTrain.leftEncoder);
     SmartDashboard.putNumber("rightPosition", driveTrain.rightEncoder);
-    SmartDashboard.putNumber("leftDistanceInches", driveTrain.leftEncoderDistance());
-    SmartDashboard.putNumber("rightDistanceInches", driveTrain.rightEncoderDistance());
+    //SmartDashboard.putNumber("leftDistanceInches", driveTrain.leftEncoderDistance());
+    SmartDashboard.putNumber("rightDistanceInches", driveTrain.getRightEncoderDistance());
     SmartDashboard.putNumber("Yaw Angle: ", ahrs.getAngle());
     SmartDashboard.putNumber("Pitch Angle: ", ahrs.getPitch());
     SmartDashboard.putNumber("Roll Angle: ", ahrs.getRoll());
@@ -153,6 +159,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     selectedAutonomous = autoChooser.getSelected();
+    useAuto.resetStep();
     ahrs.reset();
     timer.reset();
     timer.start();
@@ -171,7 +178,7 @@ public class Robot extends TimedRobot {
         useAuto.terminalHubStart();
         break;
       case("hangerHubStart"):
-        useAuto.terminalHubStart();
+        useAuto.hangarHubStart();
         break;
       case("terminalOuterLeftBall"):
         useAuto.terminalOuterLeftBall();
@@ -203,16 +210,31 @@ public class Robot extends TimedRobot {
       case("testDriveStraightBackward"):
         useAuto.testDriveStraightBackward();
         break;
+      case("testTravelDistance") :
+        useAuto.testTravelDistance();
+        break;
+      case("testMyRotate"):
+        useAuto.testMyRotate();
+        break;
+      case("testMyDriveStraight"):
+        useAuto.testMyDriveStraight();
+        break;
+      case("testTravelDistanceStraight"):
+        useAuto.testTravelDistanceStraight();
+        break;
+      case("startPosition1"):
+        useAuto.startPosition1();
+        break;
     }
   }
 
 
-  int driveTrainMode = 0;
+  int driveTrainMode = 1;
   @Override
   public void teleopPeriodic() {
-    System.out.println("teleop loop");
-    //driveTrain.TalonDrive();
+    //driveTrain.TalonDri+---ve();
     intake.intakeControl();
+
 
     if(controller.getRawButton(7)) {
       driveTrainMode = 0;
@@ -222,14 +244,21 @@ public class Robot extends TimedRobot {
     }
 
     if(driveTrainMode == 0) {
-      driveTrain.TalonDriveNoLimiter();
+      driveTrain.TalonDriveCubic();
     }
     else if(driveTrainMode == 1) {
       driveTrain.talonDriveThrottle();
     }
 
+    if(controller.getRawButtonPressed(4)){
+      ahrs.reset();
+    }
+    else if(controller.getRawButton(4)){
+      driveTrain.chargeStraight(ahrs);
+    }
     
-
+    
+  
     /*
     if(controller.getRawAxis(2) > .5) {
       driveTrain.TalonDriveNoLimiter();
